@@ -1,6 +1,6 @@
 # Guía de supervivencia para MATLAB
 
-![MATLAB GIF](https://i.pinimg.com/originals/9f/b0/e9/9fb0e9a48e6b312f4725d9497d31c46a.gif)
+![MATLAB GIF](https://i.pinimg.com/originals/fb/63/80/fb63801d227d280a92a901b3a130d32d.gif)
 
 ¡Bienvenido a mi repositorio! Soy un estudiante de tercer año de Ingeniería en Informática en la Universidad de Panamá y también estudio Tecnología Biónica en P4H Bionics. Este repositorio es una guía práctica para sobrevivir a MATLAB, un poderoso lenguaje de programación ampliamente utilizado en ingeniería, ciencias e investigación.
 
