@@ -1,4 +1,4 @@
-# Guía de supervivencia para MATLAB si eres programador
+# Guía de supervivencia para MATLAB si eres programador:
 
 <p align="center">
   <img src="https://64.media.tumblr.com/7e646d701b09619cbd7847b65ea580f0/807f9e5a5e0ce538-d1/s640x960/ac1e78393419d16d58ad72ee872caaa8360c101f.gif" alt="imagen">
