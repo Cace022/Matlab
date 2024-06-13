@@ -1,7 +1,7 @@
 # Guía de supervivencia para MATLAB
 
 <p align="center">
-  <img src="https://64.media.tumblr.com/7e646d701b09619cbd7847b65ea580f0/807f9e5a5e0ce538-d1/s640x960/ac1e78393419d16d58ad72ee872caaa8360c101f.gifv" alt="imagen">
+  <img src="https://64.media.tumblr.com/7e646d701b09619cbd7847b65ea580f0/807f9e5a5e0ce538-d1/s640x960/ac1e78393419d16d58ad72ee872caaa8360c101f.gif" alt="imagen">
 </p>
 
 ¡Bienvenido a mi repositorio! Soy un estudiante de tercer año de Ingeniería en Informática en la Universidad de Panamá y también estudio Tecnología Biónica en P4H Bionics. Este repositorio es una guía práctica para sobrevivir a MATLAB, un poderoso lenguaje de programación ampliamente utilizado en ingeniería, ciencias e investigación.
