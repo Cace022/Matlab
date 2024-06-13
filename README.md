@@ -14,8 +14,4 @@ MATLAB es una herramienta invaluable para proyectos de robótica y aplicaciones 
 
 En este repositorio, compartiré mis experiencias y conocimientos adquiridos mientras aprendo MATLAB. Encontrarás tutoriales, ejemplos de código, trucos y consejos para facilitar tu viaje en el mundo de MATLAB. Desde conceptos básicos hasta técnicas avanzadas, este repositorio te guiará a través de los desafíos y te ayudará a dominar este lenguaje.
 
-## Contribuciones
-
-¡Las contribuciones son bienvenidas! Si tienes sugerencias, correcciones o deseas compartir tus propias lecciones aprendidas, no dudes en abrir un issue o enviar un pull request. Juntos, podemos construir una comunidad de aprendizaje sólida y enriquecer este repositorio.
-
 ¡Comencemos nuestro viaje de supervivencia en MATLAB!
