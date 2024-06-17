@@ -1,5 +1,3 @@
-# Cinematica
-
 ## Antes de comenzar
 Antes de entrar en los conceptos específicos del movimiento, es importante comprender su relevancia fundamental en nuestras vidas. El movimiento es una parte integral de nuestro entorno y experiencia diaria, aunque a veces pase desapercibido.
 
