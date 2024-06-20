@@ -56,129 +56,57 @@ Julia y MATLAB son ambos lenguajes de programación que se utilizan principalmen
 
 **Ahora con esto claro empezemos a trabajar:**
 
+#### Primero empezemos con Julia.
 En julia es necesario importar paquetes adicionales y configurar algunas propiedades de los gráficos. En MATLAB por lo general ya vienen funcionalidades equivalentes.
 
 ``` julia
-using Base: @kwdef  # Importa @kwdef para definir estructuras con valores predeterminados
-using Parameters: @unpack  # Importa @unpack para extraer valores de los campos de una estructura
-using PyPlot  # Importa PyPlot para hacer gráficos
-using DifferentialEquations #importa metodos de ecuaciones diferenciales 
-rc("axes.spines", top=false, right=false)  # Elimina los bordes superior y derecho de los gráficos
+    using DifferentialEquations
+    using Plots
+    using Parameters: @unpack
 ```
 
 Ahora definiremos las contantes que se utilizaran en el modelo. Algunas de estas pueden ser fijas mientras que otras púeden variar. En el modelo de HH son cuatro las que pueden variar (v, m, h, n) y estas representan la dinámica presináptica (es el conjunto de procesos que ocurren en la terminal nerviosa antes de liberar los neurotransmisores hacia la siguiente neurona).
 
-#### Julia
 
 ``` julia
-@kwdef struct parametrosHH{FT}
-    Cm::FT = 1 # Capacitancia de la menbrana (uF/cm^2)
-    gNa::FT = 120; gk::FT = 36; gL::FT = 0.3 # Conductancias máximas para Na+, K+, fuga (mS/cm^2)
-    ENa::FT = 50; Ek::FT = -77; EL::FT = -54 # Potenciales de equilibrio para Na+, K+, fuga (mV)
-    tr::FT = 0.5; td::FT = 8 # Constantes de tiempo para la recuperación y la decadencia (ms)
-    invtr::FT = 1/tr; invtd::FT = 1/td # Estos valores inversos de se utilizan para ahorrar tiempo de computación
-    v0::FT = -20 # Potencial de membrana inicial (mV)
-end
-
-@kwdef mutable struct HH{FT}
-    param::parametrosHH = parametrosHH{FT}() #Parametros para el modelo HH
-    N::UInt16 # Numero de neoruonas o puntos de tiempo (UInt16 representa un numero entero sin signos de 16 bits)
-    v::Vector{FT} = fill(-0.65, N) # Potencial de membrana para cada neurona/punto de tiempo
-    m::Vector{FT} = fill(0.05, N); h::Vector{FT} = fill(0.6, N) # Probabilidades para los canales de Na+
-    n::Vector{FT} = fill(0.32, N); r::Vector{FT} = zeros(N) # Probabilidades para los canales de K+ y variable adicional
+@kwdef struct HHParameter{FT}
+    Cm::FT = 1.0      # Capacitancia de la membrana (uF/cm^2)
+    gNa::FT = 120.0   # Conductancia máxima del sodio (mS/cm^2)
+    gK::FT = 36.0     # Conductancia máxima del potasio (mS/cm^2)
+    gL::FT = 0.3      # Conductancia de fuga (mS/cm^2)
+    ENa::FT = 50.0    # Potencial de equilibrio del sodio (mV)
+    EK::FT = -77.0    # Potencial de equilibrio del potasio (mV)
+    EL::FT = -54.387  # Potencial de equilibrio de fuga (mV)
 end
 ```
 
-#### MATLAB
-
-``` matlab
-```
-
-ahora utilizaremos el metodo de Runge-Kutta (ode45 y solve) 
-
-#### Julia 
+ahora definiremos las funciones alfa y beta para las compuertas de sodio y potasio 
 
 ``` julia
-function hodgkin_huxley!(du, u, p, t)
-    @unpack N, v, m, h, n, r = u
-    @unpack Cm, gNa, gK, gL, ENa, EK, EL, invtr, invtd, v0 = p
-
-    @inbounds for i = 1:N
-        du[i] = ((0.1(v[i]+40)/(1 - exp(-0.1(v[i]+40))))*(1 - m[i]) - 4exp(-(v[i]+65) / 18)*m[i])
-        du[i] = ((0.07exp(-0.05(v[i]+65)))*(1.0 - h[i]) - 1/(1 + exp(-0.1(v[i]+35)))*h[i])
-        du[i] = ((0.01(v[i]+55)/(1 - exp(-0.1(v[i]+55))))*(1 - n[i]) - (0.125exp(-0.0125(v[i]+65)))*n[i])
-        du[i] = 1 / Cm * (Ie[i] - gNa * m[i]^3 * h[i] * (v[i] - ENa) - gK * n[i]^4 * (v[i] - EK) - gL * (v[i] - EL))
-        du[i] = ((invtr - invtd) * (1 - r[i])/(1 + exp(-v[i] + v0)) - r[i] * invtd)
+    function am(V)
+    return 0.1 * (V + 40) / (1 - exp(-0.1 * (V + 40)))
     end
-end
 
-# Define las condiciones iniciales y los parámetros
-u0 = [v0, m0, h0, n0, r0]
-p = [Cm, gNa, gK, gL, ENa, EK, EL, invtr, invtd, v0]
+    function bm(V)
+        return 4.0 * exp(-0.0556 * (V + 65))
+    end
 
-# Define el intervalo de tiempo para la solución
-tspan = (0.0, 1.0)
+    function ah(V)
+        return 0.07 * exp(-0.05 * (V + 65))
+    end
 
-# Resuelve la ecuación diferencial
-prob = ODEProblem(hodgkin_huxley!, u0, tspan, p)
-sol = solve(prob, Tsit5(), reltol=1e-8, abstol=1e-8) 
+    function bh(V)
+        return 1.0 / (1 + exp(-0.1 * (V + 35)))
+    end
+
+    function an(V)
+        return 0.01 * (V + 55) / (1 - exp(-0.1 * (V + 55)))
+    end
+
+    function bn(V)
+        return 0.125 * exp(-0.0125 * (V + 65))
+    end
 ```
-
-#### MATLAB 
-
-``` matlab
-``` 
-
-Ahora ejecutaremos la simulación 
-
-#### Julia 
-
-``` julia
-T = 450 
-dt = 0.05 
-nt = Int(T/dt) 
-N = 1 
-
-t = (1:nt)*dt
-Ie = repeat(10f0 * ((t .> 50) - (t .> 200)) + 35f0 * ((t .> 250) - (t .> 400)), 1, N)  # injection current
-
-varr, gatearr = zeros(nt, N), zeros(nt, 3, N)
-
-neurons = HH{Float32}(N=N)
-
-@time for i = 1:nt
-    update!(neurons, neurons.param, Ie[i, :], dt)
-    varr[i, :] = neurons.v
-    gatearr[i, :, :] .= [neurons.m; neurons.h; neurons.n]
-end
-```
-
-#### MATLAB
-
-``` matlab
-```
-
-ahora dibujaremos el potencial de menbrana de la neurona 
-
-#### Julia 
-
-``` julia 
-figure(figsize=(6, 5))
-subplot(3,1,1); plot(t, varr[:, 1], color="black"); ylabel("V (mV)")
-subplot(3,1,2); labellist=["m" "h" "n"] 
-for i in 1:3
-    plot(t, gatearr[:, i, 1], label=labellist[i])
-end; 
-ylabel("Gating Value"); legend()
-subplot(3,1,3); plot(t, Ie[:, 1], color="black"); ylabel(L"Current($\mu$A/cm$^2$)"); xlabel("Times (ms)")
-tight_layout()
-```
-
-#### MATLAB 
-
-``` matlab
-```
-
 
 
 

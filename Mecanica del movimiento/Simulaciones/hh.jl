@@ -15,27 +15,27 @@ using Parameters: @unpack
 end
 
 # Funciones alfa y beta para las compuertas del sodio y potasio
-function αm(V)
+function am(V)
     return 0.1 * (V + 40) / (1 - exp(-0.1 * (V + 40)))
 end
 
-function βm(V)
+function bm(V)
     return 4.0 * exp(-0.0556 * (V + 65))
 end
 
-function αh(V)
+function ah(V)
     return 0.07 * exp(-0.05 * (V + 65))
 end
 
-function βh(V)
+function bh(V)
     return 1.0 / (1 + exp(-0.1 * (V + 35)))
 end
 
-function αn(V)
+function an(V)
     return 0.01 * (V + 55) / (1 - exp(-0.1 * (V + 55)))
 end
 
-function βn(V)
+function bn(V)
     return 0.125 * exp(-0.0125 * (V + 65))
 end
 
