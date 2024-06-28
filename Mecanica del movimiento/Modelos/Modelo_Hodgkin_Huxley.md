@@ -6,6 +6,7 @@ Trataré de explicar de manera muy sencilla este modelo para aquellos que no tie
 El modelo de Hodgkin y Huxley describe cómo las neuronas generan y propagan señales eléctricas conocidas como potenciales de acción. Estas señales son fundamentales para que el cerebro y el sistema nervioso funcionen correctamente, permitiendo la comunicación entre células nerviosas. El modelo utiliza ecuaciones matemáticas para explicar estos procesos y ha sido crucial para nuestro entendimiento de la neurociencia.
 
 Para la realizacion de este modelo tomaremos en cuenta la revista **Spiking Neural Networks**: 
+
 https://compneuro-julia.github.io/_static/pdf/SNN_from_scratch_with_python_ver2_1.pdf
 
 ---
@@ -69,43 +70,33 @@ Ahora definiremos las contantes que se utilizaran en el modelo. Algunas de estas
 
 
 ``` julia
-@kwdef struct HHParameter{FT}
-    Cm::FT = 1.0      # Capacitancia de la membrana (uF/cm^2)
-    gNa::FT = 120.0   # Conductancia máxima del sodio (mS/cm^2)
-    gK::FT = 36.0     # Conductancia máxima del potasio (mS/cm^2)
-    gL::FT = 0.3      # Conductancia de fuga (mS/cm^2)
-    ENa::FT = 50.0    # Potencial de equilibrio del sodio (mV)
-    EK::FT = -77.0    # Potencial de equilibrio del potasio (mV)
-    EL::FT = -54.387  # Potencial de equilibrio de fuga (mV)
+@kwdef struct HHParametros{FT}
+    Cm::FT = 1.0       # Capacitancia de la membrana 
+    gNa::FT = 120.0    # Conductancia máxima del sodio 
+    gK::FT = 36.0      # Conductancia máxima del potasio 
+    gL::FT = 0.3       # Conductancia de fuga 
+    ENa::FT = 50.0     # Potencial de equilibrio del sodio 
+    EK::FT = -77.0     # Potencial de equilibrio del potasio 
+    EL::FT = -54.387   # Potencial de equilibrio de fuga 
+    tr::FT = 0.5       # ms, tiempo de subida
+    td::FT = 8         # ms, tiempo de bajada
+    invtr::FT = 1 / tr # Es la inversa del tiempo de subida
+    invtd::FT = 1 / td # Es la inversa del tiempo de bajada
+    v0::FT = -20       # mV, que sera el potencial inicial
+end
+
+@kwdef mutable struct HH{FT}
+    p::HHParametros{FT} = HHParametros{FT}() # Parámetros del modelo
+    v::FT = -65.0       # Potencial de membrana inicial
+    m::FT = 0.05        # Probabilidad de apertura de Na+
+    h::FT = 0.6         # Probabilidad de cierre de Na+
+    n::FT = 1.32        # Probabilidad de apertura de K+
 end
 ```
 
 ahora definiremos las funciones alfa y beta para las compuertas de sodio y potasio 
 
 ``` julia
-    function am(V)
-    return 0.1 * (V + 40) / (1 - exp(-0.1 * (V + 40)))
-    end
-
-    function bm(V)
-        return 4.0 * exp(-0.0556 * (V + 65))
-    end
-
-    function ah(V)
-        return 0.07 * exp(-0.05 * (V + 65))
-    end
-
-    function bh(V)
-        return 1.0 / (1 + exp(-0.1 * (V + 35)))
-    end
-
-    function an(V)
-        return 0.01 * (V + 55) / (1 - exp(-0.1 * (V + 55)))
-    end
-
-    function bn(V)
-        return 0.125 * exp(-0.0125 * (V + 65))
-    end
 ```
 
 
